@@ -1,0 +1,329 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    R容額
+{% endblock %}
+
+{% block main %}
+    <div>
+
+        <!-- 標題 -->
+        <div>
+            <h1>R訓練容額</h1>
+        </div>
+
+        <!-- 篩選以及排序選項 -->
+        <div class="mb-3">
+            <div class="filter" id="FILTER">
+                <label style="font-size:18px;">篩選:</label>
+                    <select class="user" id="YEAR" name="YEAR" multiple="multiple">
+                        <option value="all1">全部年度</option>
+                            <option value="113">113</option>
+                            <option value="112">112</option>
+                    </select>
+
+                    <select class="user" id="DEPART" name="DEPART" multiple="multiple">
+                        <option value="all2">全部科別</option>
+                            {% for DEPART in DEPARTS %}
+                            <option value="{{ DEPART | replace('(', '') | replace(')', '') | replace(' ', '_') | replace('.', '_') | replace(',', '_')}}">{{ DEPART }}</option>
+                            {% endfor %}
+                    </select>
+        
+                    <select class="user" id="HOSPITAL" name="HOSPITAL" multiple="multiple">
+                        <option value="all3">全部醫院</option>
+                            <optgroup label="北部">
+                                {% for N_HOSPITAL in NN_HOSPITALS %}
+                                <option value="{{ N_HOSPITAL | replace('(', '') | replace(')', '') | replace(' ', '_') | replace('.', '_') | replace(',', '_') }}">{{ N_HOSPITAL }}</option>
+                                {% endfor %}
+                            </optgroup>
+            
+                            <optgroup label="中部">
+                                {% for W_HOSPITAL in WW_HOSPITALS %}
+                                <option value="{{ W_HOSPITAL | replace('(', '') | replace(')', '') | replace(' ', '_') | replace('.', '_') | replace(',', '_') }}">{{ W_HOSPITAL }}</option>
+                                {% endfor %}
+                            </optgroup>
+            
+                            <optgroup label="南部">
+                                {% for S_HOSPITAL in SS_HOSPITALS %}
+                                <option value="{{ S_HOSPITAL | replace('(', '') | replace(')', '') | replace(' ', '_') | replace('.', '_') | replace(',', '_') }}">{{ S_HOSPITAL }}</option>
+                                {% endfor %}
+                            </optgroup>
+            
+                            <optgroup label="東部">
+                                {% for E_HOSPITAL in EE_HOSPITALS %}
+                                <option value="{{ E_HOSPITAL | replace('(', '') | replace(')', '') | replace(' ', '_') | replace('.', '_') | replace(',', '_') }}">{{ E_HOSPITAL }}</option>
+                                {% endfor %}
+                            </optgroup>
+            
+                            <optgroup label="其他">
+                                {% for O_HOSPITAL in OO_HOSPITALS %}
+                                <option value="{{ O_HOSPITAL | replace('(', '') | replace(')', '') | replace(' ', '_') | replace('.', '_') | replace(',', '_') }}">{{ O_HOSPITAL }}</option>
+                                {% endfor %}
+                            </optgroup>
+                    </select>
+            </div>
+            
+            <div class="sortoption" id="SORT">
+                <label for="sortColumn" style="font-size:18px;">排序:</label>
+                <select id="sortColumn" style="font-size:18px;">
+                    <option value="0.1">年度(新到舊)</option>
+                    <option value="0">年度(舊到新)</option>
+                    <option value="1">醫院名稱</option>
+                    <option value="2">科別</option>
+                    <option value="3.1">容額(大到小)</option>
+                    <option value="3">容額(小到大)</option>
+                    <option value="4.1">效期(新到舊)</option>
+                    <option value="4.2">效期(舊到新)</option>
+                </select>
+            </div>
+
+            <div class="hideoption">
+                <label style="font-size:18px;">隱藏:</label>
+                <select class="user" id="HIDE" name="HIDE" multiple="multiple">
+                    <option value="ALL">全部顯示</option>
+                    <option value="number0">容額為0</option>
+                    <option value="0">年度</option>
+                    <option value="1">醫院名稱</option>
+                    <option value="2">科別</option>
+                    <option value="3">容額</option>
+                    <option value="4">效期</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Select2功能-->
+        <script>
+            $(document).ready(function () {
+                $(".user").select2({
+                    language: 'zh-TW',
+                    tags: true,
+                });
+        
+                $("#YEAR").select2({
+                    width: '10%'
+                });
+        
+                $("#HOSPITAL").select2({
+                    width: '65%'
+                });
+
+                $("#DEPART").select2({
+                    width: '15%'
+                });
+
+                $("#HIDE").select2({
+                    width: '80%'
+                });
+            });
+        </script>
+
+        <!-- 篩選功能 -->
+        <script>
+            $(".filter select").on('change', function() {
+                $("Table").find("tr").hide();
+                $("Table").find("tr.head").show();
+
+                var filters1 = $("#YEAR").val();
+                var filters2 = $("#DEPART").val();
+                var filters3 = $("#HOSPITAL").val();
+
+                filters1 = (filters1 && filters1.length > 0) ? filters1 : ["all1"];
+                filters2 = (filters2 && filters2.length > 0) ? filters2 : ["all2"];
+                filters3 = (filters3 && filters3.length > 0) ? filters3 : ["all3"];
+
+                $.each(filters1, function(i, value1) {
+                    $.each(filters2, function(j, value2) {
+                        $.each(filters3, function(k, value3) {
+                            var filter = value1 + "." + value2 + "." + value3;
+                            $("table").find("tr." + filter).show();
+                        });
+                    });
+                });
+            });
+        </script>
+
+        <!-- 排序功能 -->
+        <script>
+            var currentSort = {
+                column: 0,
+                direction: "asc"
+            };
+
+            function parseDate(dateString) {
+                var dateParts = dateString.split('-');
+                return dateParts[dateParts.length - 1].trim();
+            }
+
+            function sortTable() {
+                var selectedOption = document.getElementById("sortColumn").value;
+                var columnIndex = parseInt(selectedOption);
+                var descending = selectedOption.endsWith(".1");
+
+                currentSort.direction = currentSort.column === columnIndex ? (currentSort.direction === "asc" ? "desc" : "asc") : "asc";
+
+                var table = document.getElementById("rTable");
+                var tbody = table.tBodies[0];
+                var rows = Array.from(tbody.rows);
+
+                rows.sort(function (a, b) {
+                    var x, y;
+
+                    switch (columnIndex) {
+                        case 0:
+                        case 3:
+                            x = parseFloat(a.cells[columnIndex].innerText) || 0;
+                            y = parseFloat(b.cells[columnIndex].innerText) || 0;
+                            break;
+                        case 4:
+                            x = parseDate(a.cells[columnIndex].innerText);
+                            y = parseDate(b.cells[columnIndex].innerText);
+                            break;
+                        default:
+                            x = a.cells[columnIndex].innerText.toLowerCase();
+                            y = b.cells[columnIndex].innerText.toLowerCase();
+                    }
+
+                    return descending ? (x > y ? -1 : 1) : (x > y ? 1 : -1);
+                });
+
+                rows.forEach(function (row) {
+                    tbody.appendChild(row);
+                });
+
+                currentSort.column = columnIndex;
+            }
+
+            document.getElementById("sortColumn").addEventListener('change', sortTable);
+
+            sortTable();
+        </script>
+
+        <!-- 隱藏功能 -->
+        <script>
+            $(document).ready(function () {
+                $('#HIDE').change(function () {
+                    var selectedValues = $(this).val();
+                    if (selectedValues && selectedValues.indexOf("ALL") !== -1) {
+                        $('#HIDE option:not(:selected)').prop('selected', false);
+                        $('#rTable th, #rTable td').show();
+                    } else {
+                        $('#rTable th, #rTable td').show();
+                        if (selectedValues) {
+                            $.each(selectedValues, function (index, value) {
+                                $('#rTable th:eq(' + value + ')').hide();
+                                $('#rTable tbody tr').each(function () {
+                                    $(this).find('td:eq(' + value + ')').hide();
+                                });
+                            });
+                        }
+                    }
+                });
+            });
+        </script>
+
+        <!-- 隱藏容額0功能 -->
+        <script>
+            $(document).ready(function () {
+                $('#HIDE').change(function () {
+                    var selectedValues = $(this).val();
+                    var hideNumber0 = selectedValues && selectedValues.indexOf("number0") !== -1;
+                    var showAll = selectedValues && selectedValues.indexOf("ALL") !== -1;
+
+                    if (showAll) {
+                        $('#HIDE option:not(:selected)').prop('selected', false);
+                        $('#rTable tbody tr').show();
+                    } else {
+                        if (hideNumber0) {
+                            $('#rTable tbody tr').each(function () {
+                                if ($(this).find('td:eq(3)').text() === '0') {
+                                    $(this).hide();
+                                }
+                            });
+                        } else {
+                            $('#rTable tbody tr').show();
+                        }
+                    }
+                    selectedValues = selectedValues.filter(function (value) {
+                        return value !== "number0";
+                    });
+
+                    if (!showAll && selectedValues) {
+                        $.each(selectedValues, function (index, value) {
+                            $('#rTable th:eq(' + value + ')').hide();
+                            $('#rTable tbody tr').each(function () {
+                                $(this).find('td:eq(' + value + ')').hide();
+                            });
+                        });
+                    }
+                });
+            });
+        </script>
+
+        <p>官方資訊:<a href="https://dep.mohw.gov.tw/DOMA/fp-2713-46862-106.html" target="_blank">歷年專科醫師訓練容額</a></p>
+
+        <div class="pgycontainer">
+        <!-- 表格顯示 -->
+            <div class="left mb-3">
+                <table id="rTable" class="order-table" style="margin: 0 auto;">
+                    <thead>
+                        <tr class="head">
+                            <th style="width: 5%;" class="sort-header" data-column="0">年度</th>
+                            <th style="width: 55%;" class="sort-header" data-column="1">醫院</th>
+                            <th style="width: 10%;" class="sort-header" data-column="2">科別</th>
+                            <th style="width: 5%;" class="sort-header" data-column="3">容額</th> 
+                            <th style="width: 25%;" class="sort-header" data-column="4">效期</th>                
+                        </tr>
+                    </thead>          
+                                    
+                    <tbody>
+                        {% for NUMBER in NUMBERS %}
+                            <tr class="all1 all2 all3 {{ NUMBER.year }} {{ NUMBER.hospital | replace('(', '') | replace(')', '') | replace(' ', '_') | replace('.', '_') | replace(',', '_') }} {{ NUMBER.depart }} {{ NUMBER.number }} {{ NUMBER.duration }}">
+                                <td>{{ NUMBER.year }}</td>
+                                <td>{{ NUMBER.hospital }}</td>
+                                <td>{{ NUMBER.depart }}</td>
+                                <td>{{ NUMBER.number }}</td>
+                                <td>{{ NUMBER.duration }}</td>
+                            </tr>
+                        {% endfor %}
+
+                        {% for NEURO in NEUROS %}
+                        <tr class="all1 all2 all3 {{ NEURO.year }} {{ NEURO.hospital | replace('(', '') | replace(')', '') | replace(' ', '_') | replace('.', '_') | replace(',', '_') }} {{ NEURO.depart }} {{ NEURO.number }} {{ NEURO.duration }}">
+                            <td>{{ NEURO.year }}</td>
+                            <td>{{ NEURO.hospital }}</td>
+                            <td>{{ NEURO.depart }}</td>
+                            <td>{{ NEURO.number }}</td>
+                            <td><a href="/static/{{ NEURO.year }}r/{{ NEURO.year }}{{ NEURO.depart }}.pdf/" target="_blank">{{ NEURO.year }}神經科公告</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>            
+            </div>
+
+            <div class="right mb-3">
+                <table id="rNumberTable" class="order-table" style="margin: 0 auto;">
+                    <thead>
+                        <tr class="head">
+                            <th style="width: 10%;" class="sort-header" data-column="0">年度</th>
+                            <th hidden data-column="1"></th>
+                            <th style="width: 30%;" class="sort-header" data-column="2">科別</th>
+                            <th style="width: 20%;" class="sort-header" data-column="3">容額</th>               
+                        </tr>
+                    </thead>          
+                                    
+                    <tbody>
+                        {% for TOTAL in TOTALS %}
+                            <tr class="all1 all2 all3 {{ TOTAL.year }} {{ TOTAL.depart }} {{ TOTAL.number }}">
+                                <td>{{ TOTAL.year }}</td>
+                                <td hidden></td>
+                                <td><a href="/static/{{ TOTAL.year }}r/{{ TOTAL.year }}{{ TOTAL.depart }}.pdf/" target="_blank">{{ TOTAL.depart }}</a></td>
+                                <td>{{ TOTAL.total }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>  
+            </div>            
+        </div>
+
+
+    </div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    登入
+{% endblock %}
+
+{% block main %}
+    <form action="/login" method="post">
+        <div>
+            <h1>請登入(未註冊者請點右上角註冊)</h1>
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="帳號" type="text">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="密碼" type="password">
+        </div>
+        <button class="btn btn-primary" type="submit">登入</button>
+    </form>
+{% endblock %}

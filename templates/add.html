@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    新增活動
+{% endblock %}
+
+{% block main %}
+
+    <div>
+        <h2 style="color: black;">新增活動(<span id="RED">科別</span>,<span id="RED">活動類別</span>,<span id="RED">醫院名稱</span>為必填)</h2>
+    </div>
+
+    <!-- 新增活動功能 -->
+    <div class="mb-3" style="margin: 0 auto;">
+        
+        <form action="/add" method="post" enctype="multipart/form-data" onsubmit="return validateFileSize()">
+            <div>
+                <label style="font-size:18px;">活動舉辦時間(若無也可填今天)</label>
+                <input id="DATETIME" name="DATETIME" type="datetime-local" style="padding:8px;">
+                <select class="user" id="DEPART" name="DEPART" required>
+                    <option disabled selected>科別</option>
+                    {% for DEPART in DEPARTS %}
+                    <option value="{{ DEPART }}">{{ DEPART }}</option>
+                    {% endfor %}
+                </select>
+
+                <select class="user" id="TYPE" name="TYPE" required>
+                    <option disabled selected>活動類別</option>
+                    {% for TYPE in TYPES %}
+                    <option value="{{ TYPE }}">{{ TYPE }}</option>
+                    {% endfor %}
+                </select>
+
+                <select class="user" id="HOSPITAL" name="HOSPITAL" required>
+                    <option disabled selected>醫院名稱</option>
+                    <optgroup label="北部">
+                        {% for N_HOSPITAL in N_HOSPITALS %}
+                        <option value="{{ N_HOSPITAL }}">{{ N_HOSPITAL }}</option>
+                        {% endfor %}
+                    </optgroup>
+
+                    <optgroup label="中部">
+                        {% for W_HOSPITAL in W_HOSPITALS %}
+                        <option value="{{ W_HOSPITAL }}">{{ W_HOSPITAL }}</option>
+                        {% endfor %}
+                    </optgroup>
+
+                    <optgroup label="南部">
+                        {% for S_HOSPITAL in S_HOSPITALS %}
+                        <option value="{{ S_HOSPITAL }}">{{ S_HOSPITAL }}</option>
+                        {% endfor %}
+                    </optgroup>
+
+                    <optgroup label="東部">
+                        {% for E_HOSPITAL in E_HOSPITALS %}
+                        <option value="{{ E_HOSPITAL }}">{{ E_HOSPITAL }}</option>
+                        {% endfor %}
+                    </optgroup>
+
+                    <optgroup label="其他">
+                        {% for O_HOSPITAL in O_HOSPITALS %}
+                        <option value="{{ O_HOSPITAL }}">{{ O_HOSPITAL }}</option>
+                        {% endfor %}
+                    </optgroup>
+                </select>
+                <script>
+                    $(function (){
+                        $(".user").select2({
+                            language: 'zh-TW',
+                            tags: true,
+                        });
+                        $("#DEPART").select2({
+                            width: '8%'
+                        });
+                        $("#TYPE").select2({
+                            width: '10%'
+                        });
+                        $("#HOSPITAL").select2({
+                            width: '35%'
+                        });
+                    })
+                </script>
+            </div>
+
+            <br>
+
+            <div>
+                <input id="NUMBER" name="NUMBER" type="number" style="font-size:18px;" placeholder="名額">
+                <input id="PLACE" name="PLACE" type="text" autocomplete="off" autofocus style="font-size:18px;" placeholder="舉辦地點" style="padding:8px;">
+                <input id="LINK" name="LINK" type="url" autocomplete="off" autofocus style="font-size:18px;" placeholder="報名連結" style="padding:8px;">
+            </div>
+            <br>
+            <div>
+                <p style="font-size:18px;" id="noenter">較早的截止日(假設報名截止日12/16，郵戳截止日12/27，則請填寫12/16)<input id="DEADLINE" name="DEADLINE" type="date"></p>
+            </div>
+
+            <br>
+
+            <div>
+                <textarea id="OTHER" name="OTHER" autocomplete="off" autofocus placeholder="備註及相關事項" rows="10" cols="100" style="padding:8px;"></textarea>
+                <br>
+                限小於15MB的PDF,Word,PPT及圖片檔:<input type="file" name="fileInput" id="fileInput" accept=".pdf, image/*, .docx, .doc, .pptx" size="15728640">
+                <button type="submit">輸入活動</button>
+            </div>
+            <!-- 檢查檔案大小 -->
+            <script>
+                function validateFileSize() {
+                    var fileInput = document.getElementById('fileInput');
+                    
+                    if (fileInput.files.length > 0) {
+                        var fileSize = fileInput.files[0].size;
+                        var maxSize = 15 * 1024 * 1024;
+
+                        if (fileSize > maxSize) {
+                            alert('File size exceeds 15MB. Please select a smaller file.');
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            </script>
+        </form>
+    </div>
+
+{% endblock %}

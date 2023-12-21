@@ -1,0 +1,202 @@
+body {
+    background-color: #fff;
+    color: #212529;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+    text-align: left;
+}
+
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: center;
+    width: 90%;
+}
+
+.header {
+    background-color: #477bff;
+    color: #fff;
+    margin-bottom: 2rem;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.section {
+    margin: 2rem;
+}
+
+.mb-3 {
+    overflow-x: auto;
+    max-width: 100%;
+    margin: 0 auto;
+    padding-bottom: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 1.5rem;
+}
+
+.mb-3:hover {
+    background-color: #f5f5f5;
+    transition: color 2s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 30px;
+}
+
+button, input[type="submit"] {
+    background-color: #d9edff;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    font-size: 0.95rem;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 0.375rem 0.75rem;
+    text-align: center;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    vertical-align: middle;
+}
+
+input[type="text"], input[type="number"] {
+    line-height: 1.8;
+    width: 40%;
+}
+
+input[type="text"]:hover, input[type="number"]:hover {
+    background-color: #f5f5f5;
+    transition: color 2s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+table {
+    background-color: transparent;
+    width: 100%;
+    margin: 0 auto;
+    table-layout: fixed;
+    word-break: break-all;
+}
+
+table th,
+table td {
+    vertical-align: middle;
+    word-break: normal;
+}
+
+table td {
+    height:max-content ;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+tbody tr:nth-of-type(odd) {
+    background-color: rgb(179, 208, 255, 0.3);
+}
+
+tbody tr:nth-of-type(even) {
+    background-color: rgba(228, 233, 246, 0.3);
+}
+
+.hiscontain {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    padding-top: 0;
+    padding-bottom: 0;
+    white-space: pre-line;
+    align-items: center;
+}
+
+.show-more-btn{
+    justify-content: center;
+    margin:0 auto;
+    display: none;
+}
+
+.show-less-btn{
+    justify-content: center;
+    margin:0 auto;
+    display: none;
+}
+
+.containtotal{
+    height: 100px;
+    margin: 0 auto;
+}
+
+input[type="number"] {
+    width: 50px;
+}
+
+#noenter {
+    display: inline-block;
+}
+
+.container > .section > form > div {
+    flex-direction: column;
+}
+
+.container > .section > form > div > input {
+    height: 30px;
+}
+
+#NUMBER {
+    width: 10%;
+}
+
+.filter {
+    width: 70%;
+    display: inline-block;
+}
+
+.sortoption {
+    width: 25%;
+    display: inline-block;
+}
+
+#FILTER {
+    width: 70%;
+    display: inline-block;
+}
+
+#SORT {
+    width: 18%;
+    display: inline-block;
+}
+
+.hideoption {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.pgycontainer {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.left {
+    margin-right: 10px;
+    width: 70%;
+}
+
+.right {
+    margin-left: 10px;
+    width: 20%;
+}
+
+#LINK {
+    width:30%;
+}
+
+#PLACE {
+    width:45%;
+}
+
+#RED {
+    color: red;
+}

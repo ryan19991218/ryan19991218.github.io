@@ -1,0 +1,36 @@
+
+CREATE TABLE info (key INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, datetime TEXT, depart TEXT, type TEXT, hospital TEXT, number INTEGER, place TEXT, link TEXT, deadline TEXT, other TEXT, id INTEGER, file TEXT, currenttime TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+
+CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, username TEXT NOT NULL, hash TEXT NOT NULL);
+CREATE TABLE sqlite_sequence(name,seq);
+CREATE UNIQUE INDEX username ON users (username);
+CREATE TABLE pgy (key INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, year INTEGER, hospital TEXT, depart TEXT, place TEXT, number INTEGER, type TEXT);
+CREATE TABLE link (key INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, year INTEGER, depart TEXT, name TEXT, link TEXT, type TEXT, total INTERGER);
+CREATE TABLE r (key INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, year INTEGER, hospital TEXT, depart TEXT, place TEXT, number INTEGER, duration TEXT, type TEXT);
+CREATE TABLE number (key INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, year INTEGER, depart TEXT, total INTERGER, type TEXT);
+
+INSERT INTO number (year, depart, total, type) VALUES (112,'科',,'R');
+
+INSERT INTO r (year, hospital, depart, place, number, duration, type) VALUES (,,,,,,);
+
+insert into r (year, hospital, depart, place, number, duration, type)
+values
+把11插入每一個year
+把醫院名稱插入hospital
+把科插入每一個depart
+把醫院所在地插入place
+把訓練容額插入number
+把資格效期插入duration
+把R插入每一個type
+
+-- For the first query
+SELECT DISTINCT hospital FROM r WHERE place IN ('基隆市', '台北市', '新北市', '桃園市', '新竹市');
+
+-- For the second query
+SELECT DISTINCT hospital FROM r WHERE place IN ('苗栗縣', '台中市', '彰化縣', '南投縣', '雲林縣');
+
+-- For the third query
+SELECT DISTINCT hospital FROM r WHERE place IN ('嘉義市', '嘉義縣', '台南市', '高雄市', '屏東縣');
+
+-- For the fourth query
+SELECT DISTINCT hospital FROM r WHERE place IN ('宜蘭縣', '花蓮縣', '台東縣');

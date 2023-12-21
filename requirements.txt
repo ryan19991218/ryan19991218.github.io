@@ -1,0 +1,7 @@
+Flask
+Flask-Session
+Werkzeug
+cs50
+requests
+pytz
+gunicorn
